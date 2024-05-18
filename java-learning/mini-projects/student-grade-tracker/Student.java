@@ -60,7 +60,9 @@ public class Student {
         return streamName;
     }
 
-
+    // =========================
+    // PERCENTAGE CALCULATING USING BUSINESS METHOD
+    // =========================
     public double getPercentage() {
         return (marks / 500.0) * 100;
     }
