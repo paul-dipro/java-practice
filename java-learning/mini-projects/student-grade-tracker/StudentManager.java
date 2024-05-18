@@ -107,7 +107,7 @@ public class StudentManager {
 
         while (true) {
 
-            System.out.print("Enter student name: ");
+            System.out.print("\nEnter student name: ");
 
             String name = sc.nextLine().trim();
 
