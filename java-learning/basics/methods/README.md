@@ -1,8 +1,19 @@
 # Methods in Java
 
-## 📌 Core Idea
+## 📌 What is a Method?
 
-A method is a block of code that performs a task and can be reused.
+A method is a reusable block of code that performs a specific task.
+
+Instead of writing the same logic multiple times, we define a method once and call it when needed.
+
+---
+
+## 🚀 Practice Implemented
+Built a simple calculator using methods
+Used:
+method parameters
+return values
+conditional logic
 
 ---
 
@@ -10,45 +21,5 @@ A method is a block of code that performs a task and can be reused.
 
 ```java
 returnType methodName(parameters) {
-    // body
+    // logic
 }
-```
-
----
-
-## 🔹 Example
-
-```java
-class Main {
-    static int add(int a, int b) {
-        return a + b;
-    }
-
-    public static void main(String[] args) {
-        int result = add(2, 3);
-        System.out.println(result);
-    }
-}
-```
-
----
-
-## ⚔️ Types
-
-* **Void method** → no return value
-* **Return method** → returns value
-
----
-
-## ⚠️ Rules
-
-* Method must be called to execute
-* Return type must match returned value
-* Static methods don’t need object
-
----
-
-## 🎯 Key Insight
-
-* Methods = code reuse + cleaner structure
-* Break problems into small methods
