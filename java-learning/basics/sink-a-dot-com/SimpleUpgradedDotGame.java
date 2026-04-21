@@ -30,7 +30,7 @@ class SimpleUpgradedDotGame {
         
         boolean isAlive = true;
         int numOfGuesses = 0;
-s
+
         int randomNum = (int) (Math.random() * 5);
         ArrayList<String> locations = new ArrayList<String>();
         
