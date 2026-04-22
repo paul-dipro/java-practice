@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-class SimpleDotGame {
+class SinkDotComGame {
 
     private int[] locationCells;
     private int numOfHits = 0;
