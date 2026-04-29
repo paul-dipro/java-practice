@@ -17,6 +17,10 @@ class Calculator {
     double add(int a, double b) {
         return a + b;
     }
+
+   long  add(long a,long b) {
+        return a + b;
+   }
 }
 
 public class CalculatorTest {
@@ -24,11 +28,11 @@ public class CalculatorTest {
 
         Calculator calc = new Calculator();
 
-        System.out.println(calc.add(2, 3));        // 5
-        System.out.println(calc.add(2, 3, 4));     // 9
-        System.out.println(calc.add(2.5, 3.5));    // 6.0
-        System.out.println(calc.add(8, 9.0)); //17.0
-        System.out.println(calc.add(2, 3));
-        System.out.println(calc.add(7, 3.5));
+        System.out.println(calc.add(2, 3));          // 5
+        System.out.println(calc.add(2, 3, 4));  // 9
+        System.out.println(calc.add(2.5, 3.5));   // 6.0
+        System.out.println(calc.add(8, 9.0));    //17.0
+        System.out.println(calc.add(7, 3.5));   // 10.5
+
     }
 }
