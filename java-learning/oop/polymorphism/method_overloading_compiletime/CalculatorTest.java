@@ -13,6 +13,10 @@ class Calculator {
     double add(double a, double b) {
         return a + b;
     }
+
+    double add(int a, double b) {
+        return a + b;
+    }
 }
 
 public class CalculatorTest {
@@ -24,5 +28,7 @@ public class CalculatorTest {
         System.out.println(calc.add(2, 3, 4));     // 9
         System.out.println(calc.add(2.5, 3.5));    // 6.0
         System.out.println(calc.add(8, 9.0)); //17.0
+        System.out.println(calc.add(2, 3));
+        System.out.println(calc.add(7, 3.5));
     }
 }
