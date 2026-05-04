@@ -21,5 +21,3 @@ Animal a = new Dog();  // runtime polymorphism
 a.sound();             // JVM calls Dog's version, not Animal's
 ```
 ```
-
-That's it.
