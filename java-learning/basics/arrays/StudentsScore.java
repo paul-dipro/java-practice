@@ -1,7 +1,7 @@
 public class StudentsScore { 
   public static void main(String[] args) { 
     
-    String[] students = {"Sade", "Alexus", "Sam", "Koma"}; 
+    String[] students = {"Sade", "Alexus", "Dipro", "Koma"}; 
     
     int[] mathScores = new int[4]; 
     mathScores[0] = 64; 
