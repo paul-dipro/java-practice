@@ -1,3 +1,3 @@
 # Java Practice
 
-Ongoing Java programming practice and exercises and mini projects with daily documenting.
+Ongoing Java programming practice and exercises and mini projects with daily documentation.
