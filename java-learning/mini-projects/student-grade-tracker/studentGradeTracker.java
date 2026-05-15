@@ -4,9 +4,8 @@ import java.util.ArrayList;
 class Student {
     private String name;
     private double marks;
-    private char grade;
 
-    public Student(String name, double marks, char grade){
+    public Student(String name, double marks){
         this.name = name;
         this.marks = marks;
         this.grade = grade;
@@ -21,10 +20,6 @@ class Student {
         this.marks = marks;
     }
 
-    public void setStudentGrade(char grade){
-        this.grade = grade;
-    }
-
     String getStudentName(){
         return this.name;
     }
@@ -33,9 +28,6 @@ class Student {
         return this.marks;
     }
 
-    char getStudentGrade(){
-        return this.grade;
-    }
 }
 
 public class studentGradeTracker {
@@ -66,6 +58,11 @@ public class studentGradeTracker {
 
            sc.nextLine();
        }
+       }
+
+        for (Student s : students) {
+            System.out.println("Name: " + s.getStudentName() + " | Grade: " + s.getStudentGrade());
+        }
 
         for (Student s : students) {
             System.out.println("Name: " + s.getStudentName() + " | Grade: " + s.getStudentGrade());
