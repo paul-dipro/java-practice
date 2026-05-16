@@ -27,7 +27,7 @@ public class DesertIslandPlaylist {
         // Checking size
         System.out.println("\nTotal songs: " + playlist.size());
 
-        // Loop through playlist
+        // Looping through the playlist
         System.out.println("\nTrack List:");
         for(String song : playlist){
             System.out.println("- " + song);
