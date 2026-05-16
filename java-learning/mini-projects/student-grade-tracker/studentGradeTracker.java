@@ -108,6 +108,9 @@ public class studentGradeTracker {
            students.add(new Student(name, marks, streamCode, streamName));
 
 
+           sc.nextLine();
+
+
        }
 
             for (Student s : students) {
