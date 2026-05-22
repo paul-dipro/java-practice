@@ -7,14 +7,14 @@ public class DNASequencing {
         int end = DNA.indexOf("TGA");
 
         // --- DNA START & END POSITIONS ---
-        System.out.println(start);
-        System.out.println(end);
+        System.out.println("DNA Start Position: " + start);
+        System.out.println("DNA End Position: " + end);
 
         // --- EXTRACTED DNA SEQUENCE ---
-        System.out.println(DNA.substring(start, end));
+        System.out.println("Extracted Sequence: " + DNA.substring(start, end));
 
         // --- EXTRACTED SEQUENCE LENGTH ---
         String extractedSequence = DNA.substring(start, end);
-        System.out.println(extractedSequence.length());
+        System.out.println("Sequence Length: " + extractedSequence.length());
     }
 }
