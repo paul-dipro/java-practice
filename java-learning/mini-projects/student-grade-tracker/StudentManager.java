@@ -7,6 +7,12 @@ public class StudentManager {
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
 
+
+
+    // =========================
+    // MENU
+    // =========================
+
     // =========================
     // COLLECT STUDENT DATA
     // =========================
@@ -25,7 +31,7 @@ public class StudentManager {
             String streamName = resolveStreamName(streamCode);
 
             students.add(
-                    new Student(name, marks, streamCode, streamName)
+                    new Student(menuCode, menuName, name, marks, streamCode, streamName)
             );
         }
     }
@@ -178,5 +184,7 @@ public class StudentManager {
 
             default -> "UNKNOWN";
         };
+
+
     }
 }
