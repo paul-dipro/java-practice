@@ -7,12 +7,6 @@ public class StudentManager {
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
 
-
-
-    // =========================
-    // MENU
-    // =========================
-
     // =========================
     // COLLECT STUDENT DATA
     // =========================
@@ -25,13 +19,15 @@ public class StudentManager {
             System.out.println("\n========== STUDENT " + (i + 1) + " ==========");
 
             String name = getValidName();
+            int roll    = getValidRoll();
             double marks = getValidMarks();
 
             int streamCode = getValidStream();
             String streamName = resolveStreamName(streamCode);
 
             students.add(
-                    new Student(menuCode, menuName, name, marks, streamCode, streamName)
+
+                    new Student(name, roll, marks, streamCode, streamName)
             );
         }
     }
@@ -50,12 +46,14 @@ public class StudentManager {
             System.out.printf("""
                         
                         Name       : %s
+                        Roll       : %d
                         Marks      : %.1f / 500
                         Stream     : %s
                         Percentage : %.2f%%
                         Grade      : %s
                         """,
                     s.getName(),
+                    s.getRoll(),
                     s.getMarks(),
                     s.getStreamName(),
                     s.getPercentage(),
@@ -125,6 +123,24 @@ public class StudentManager {
         }
     }
 
+    private int getValidRoll() {
+
+        int roll;
+
+        while (true) {
+
+            System.out.print("Roll: ");
+
+            roll = sc.nextInt();
+
+            if(roll > 0) {
+
+                return roll;
+            }
+            System.out.println("Invalid Roll!");
+        }
+    }
+
     private double getValidMarks() {
 
         double marks;
@@ -184,7 +200,46 @@ public class StudentManager {
 
             default -> "UNKNOWN";
         };
+    }
+
+         // =========================
+        // SEARCH STUDENT
+        // =========================
+
+        public void searchByRoll(int roll){
+
+
+            for (Student s : students) {
+
+                if (s.getRoll() == roll) {
+
+                    String grade = gradeSystem.getGrade(s.getMarks());
+
+                    System.out.printf("""
+                        
+                        **SEARCH FOUND**
+                        
+                        Name       : %s
+                        Roll       : %d
+                        Marks      : %.1f / 500
+                        Stream     : %s
+                        Percentage : %.2f%%
+                        Grade      : %s
+                        """,
+                            s.getName(),
+                            s.getRoll(),
+                            s.getMarks(),
+                            s.getStreamName(),
+                            s.getPercentage(),
+                            grade
+                    );
+                    return;
+                }
+            }
+
+            System.out.println("Student not found.");
+        }
+
 
 
     }
-}

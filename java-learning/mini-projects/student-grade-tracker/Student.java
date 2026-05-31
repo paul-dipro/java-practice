@@ -3,9 +3,8 @@ public class Student {
     // =========================
     // FIELDS
     // =========================
-    private int menuCode;
-    private String menuName;
     private String name;
+    private int roll;
     private double marks;
     private int streamCode;
     private String streamName;
@@ -13,10 +12,9 @@ public class Student {
     // =========================
     // CONSTRUCTOR
     // =========================
-    public Student(int menuCode, String menuName, String name, double marks, int streamCode, String streamName) {
-        this.menuCode = menuCode;
-        this.menuName = menuName;
+    public Student(String name, int roll, double marks, int streamCode, String streamName) {
         this.name = name;
+        this.roll = roll;
         this.marks = marks;
         this.streamCode = streamCode;
         this.streamName = streamName;
@@ -25,16 +23,13 @@ public class Student {
     // =========================
     // SETTERS
     // =========================
-    public void setMenuCode(int menuCode) {
-        this.menuCode = menuCode;
-    }
-
-    public void setMenuName(String menuName) {
-        this.menuName = menuName;
-    }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setRoll(int roll) {
+        this.roll = roll;
     }
 
     public void setMarks(double marks) {
@@ -53,16 +48,12 @@ public class Student {
     // GETTERS
     // =========================
 
-    public int menuCode() {
-        return menuCode;
-    }
-
-    public String menuName() {
-        return menuName;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public int getRoll() {
+        return roll;
     }
 
     public double getMarks() {
