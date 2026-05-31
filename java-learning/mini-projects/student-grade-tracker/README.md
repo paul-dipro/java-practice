@@ -21,6 +21,14 @@ This project is designed as a foundation for backend development thinking in Jav
 
 ---
 
+## 🛠️ Tech Stack
+
+- Java
+- Object-Oriented Programming (OOP)
+- ArrayList
+- Scanner
+- CLI (Command Line Interface)
+
 ## 🏗️ System Architecture
 
 ```
