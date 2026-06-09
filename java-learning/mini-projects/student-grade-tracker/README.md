@@ -1,4 +1,4 @@
-# 📘 Student Grade Tracker (Java OOP Project)
+# 📘 Student Grade Tracker (Java OOP CLI Project)
 
 
 ---
