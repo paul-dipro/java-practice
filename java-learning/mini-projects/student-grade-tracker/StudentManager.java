@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class StudentManager {
 
@@ -125,19 +126,26 @@ public class StudentManager {
 
     private int getValidRoll() {
 
-        int roll;
-
         while (true) {
 
             System.out.print("Roll: ");
 
-            roll = sc.nextInt();
+            try {
 
-            if(roll > 0) {
+                int roll = sc.nextInt();
+                sc.nextLine();
 
-                return roll;
+                if (roll > 0) {
+                    return roll;
+                }
+
+                System.out.println("Roll must be positive.");
+
+            } catch (InputMismatchException e) {
+
+                System.out.println("Numbers only.");
+                sc.nextLine();
             }
-            System.out.println("Invalid Roll!");
         }
     }
 
