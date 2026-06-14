@@ -135,11 +135,20 @@ public class StudentManager {
                 int roll = sc.nextInt();
                 sc.nextLine();
 
-                if (roll > 0) {
+                boolean isDuplicate = false;
+
+                for(Student s : students) {
+                    if (roll == s.getRoll()) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (roll > 0 && !isDuplicate) {
                     return roll;
                 }
 
-                System.out.println("Roll must be positive.");
+                System.out.println("Roll must be positive and unique.");
 
             } catch (InputMismatchException e) {
 
