@@ -19,4 +19,4 @@ A management tool for academic data entry and analysis.
 ## Technical Stack
 *   **Language:** Java 17+
 *   **Architecture:** Command Line Interface (CLI)
-*   **Focus:** Core Backend Logic & Problem Solving
+  
