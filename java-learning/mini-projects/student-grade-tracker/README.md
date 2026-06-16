@@ -158,9 +158,3 @@ Stream     : ARTS
 Percentage : 89.00%
 Grade      : A+
 ```
-
----
-
-## 👨‍💻 Author
-
-Java learning project focused on building strong fundamentals in **OOP and backend system design thinking**.
