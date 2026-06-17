@@ -36,9 +36,3 @@ Acts as the main game controller. It handles game setup, maintains the master li
 
 ---
 
-## 🚀 How to Run
-
-### Prerequisites
-Ensure you have the Java Development Kit (JDK) installed on your machine. You can verify this by running:
-```bash
-java -version
