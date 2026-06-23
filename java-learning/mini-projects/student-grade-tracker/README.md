@@ -14,6 +14,7 @@ Managing student records manually becomes inefficient when dealing with multiple
 To build a console-based system that:
 
 * Stores student data
+* Checks duplicate rolls
 * Processes academic performance
 * Calculates grades dynamically
 * Generates reports and summaries
