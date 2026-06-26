@@ -1,12 +1,21 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.File;
 
 public class StudentManager {
 
+    // 1. ALL FIELDS AT THE TOP
     private final ArrayList<Student> students = new ArrayList<>();
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
+
+    private final String FILE_NAME = "students.txt";
 
     // =========================
     // COLLECT STUDENT DATA
@@ -257,6 +266,23 @@ public class StudentManager {
             System.out.println("Student not found.");
         }
 
+         // =========================
+         //   SAVE DATA IN DOCUMENT
+        // ==========================
+
+
+    public void saveStudentsToFile() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (Student s : students) {
+                String line = s.getName() + "," + s.getRoll() + "," + s.getMarks() + "," + s.getStreamName();
+                writer.write(line);
+                writer.newLine();
+            }
+            System.out.println("Data saved successfully!");
+        } catch (IOException e) {
+            System.err.println("Error saving students: " + e.getMessage());
+        }
+    }
 
 
     }

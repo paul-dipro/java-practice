@@ -10,15 +10,15 @@ public class Main {
 
         while (true) {
             System.out.println("""
-                    \n_______________
+                  \n_______________
                     
                          MENU
                     _______________
-                    \n1. Add Students
+                  \n1. Add Students
                     2. Search Student
                     3. Display All
                     4. Average
-                    5. Exit
+                    5. Save/Exit
                     """);
 
             System.out.print("Choose an option: ");
@@ -35,7 +35,8 @@ public class Main {
                 case 3 -> manager.displayAllStudents();
                 case 4 -> manager.displayAverage();
                 case 5 -> {
-                    System.out.println("Exiting...");
+                    manager.saveStudentsToFile(); // Call the save method first
+                    System.out.println("Data saved. Exiting...");
                     return;
                 }
 
