@@ -4,7 +4,7 @@ A collection of foundational backend utilities designed to demonstrate core Java
 
 ---
 
-## 1. Sink-a-Dot Game
+## 1. Sink-a-Dot Game(v1 & v2)
 A terminal-based logic game based on the "Battleship" concept.
 *   **Core Concepts:** Array manipulation, random coordinate generation, and game loop management.
 *   **Goal:** Sink all hidden targets in the fewest possible moves.

@@ -3,7 +3,6 @@
 
 ---
 
-
 ## 🧭 Problem Statement
 
 Managing student records manually becomes inefficient when dealing with multiple students, marks calculation, and performance tracking. This CLI project simulates a lightweight student management system using Java to demonstrate **Object-Oriented Design, separation of concerns, and business logic structuring**.
@@ -15,6 +14,7 @@ Managing student records manually becomes inefficient when dealing with multiple
 To build a console-based system that:
 
 * Stores student data
+* Checks duplicate rolls
 * Processes academic performance
 * Calculates grades dynamically
 * Generates reports and summaries
@@ -66,6 +66,7 @@ Responsible for:
 * Displaying reports
 * Calculating averages
 * Managing student collection (ArrayList)
+* Duplicate roll handeling
 
 ---
 
