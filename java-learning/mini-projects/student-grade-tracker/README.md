@@ -18,6 +18,7 @@ To build a console-based system that:
 * Processes academic performance
 * Calculates grades dynamically
 * Generates reports and summaries
+* Can write student data into a txt file
 
 This project is designed as a foundation for backend development thinking in Java.
 
