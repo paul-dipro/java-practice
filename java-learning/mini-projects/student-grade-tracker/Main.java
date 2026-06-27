@@ -8,6 +8,9 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         StudentManager manager = new StudentManager();
 
+        //Loading data at frist
+        manager.loadStudentsFromFile();
+
         while (true) {
             System.out.println("""
                   \n_______________
@@ -25,7 +28,6 @@ public class Main {
             int choice = sc.nextInt();
 
             switch (choice) {
-
                 case 1 -> manager.collectStudents();
                 case 2 -> {
                     System.out.print("Enter roll number: ");
@@ -35,11 +37,10 @@ public class Main {
                 case 3 -> manager.displayAllStudents();
                 case 4 -> manager.displayAverage();
                 case 5 -> {
-                    manager.saveStudentsToFile(); // Call the save method first
+                    manager.saveStudentsToFile();
                     System.out.println("Data saved. Exiting...");
                     return;
                 }
-
                 default -> System.out.println("Invalid choice");
             }
         }

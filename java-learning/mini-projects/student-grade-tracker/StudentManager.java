@@ -14,20 +14,16 @@ public class StudentManager {
     private final ArrayList<Student> students = new ArrayList<>();
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
-
     private final String FILE_NAME = "students.txt";
 
     // =========================
     // COLLECT STUDENT DATA
     // =========================
     public void collectStudents() {
-
         int totalStudents = getValidStudentCount();
 
         for (int i = 0; i < totalStudents; i++) {
-
             System.out.println("\n========== STUDENT " + (i + 1) + " ==========");
-
             String name = getValidName();
             int roll    = getValidRoll();
             double marks = getValidMarks();
@@ -35,10 +31,7 @@ public class StudentManager {
             int streamCode = getValidStream();
             String streamName = resolveStreamName(streamCode);
 
-            students.add(
-
-                    new Student(name, roll, marks, streamCode, streamName)
-            );
+            students.add(new Student(name, roll, marks, streamCode, streamName));
         }
     }
 
@@ -46,11 +39,9 @@ public class StudentManager {
     // DISPLAY ALL STUDENTS
     // =========================
     public void displayAllStudents() {
-
         System.out.println("\n========== STUDENT REPORT ==========");
 
         for (Student s : students) {
-
             String grade = gradeSystem.getGrade(s.getMarks());
 
             System.out.printf("""
@@ -76,7 +67,6 @@ public class StudentManager {
     // DISPLAY CLASS AVERAGE
     // =========================
     public void displayAverage() {
-
         double totalMarks = 0;
 
         for (Student s : students) {
@@ -97,55 +87,40 @@ public class StudentManager {
     // =========================
     // VALIDATIONS
     // =========================
-
     private int getValidStudentCount() {
-
         int count;
-
         while (true) {
-
             System.out.print("Enter number of students: ");
-
             count = sc.nextInt();
             sc.nextLine();
 
             if (count > 0) {
                 return count;
             }
-
             System.out.println("Invalid! Student count must be greater than 0.");
         }
     }
 
     private String getValidName() {
-
         while (true) {
-
             System.out.print("\nEnter student name: ");
-
             String name = sc.nextLine().trim();
 
             if (!name.isEmpty()) {
                 return name.toUpperCase();
             }
-
             System.out.println("Name cannot be empty.");
         }
     }
 
     private int getValidRoll() {
-
         while (true) {
-
             System.out.print("Roll: ");
-
             try {
-
                 int roll = sc.nextInt();
                 sc.nextLine();
 
                 boolean isDuplicate = false;
-
                 for(Student s : students) {
                     if (roll == s.getRoll()) {
                         isDuplicate = true;
@@ -156,11 +131,8 @@ public class StudentManager {
                 if (roll > 0 && !isDuplicate) {
                     return roll;
                 }
-
                 System.out.println("Roll must be positive and unique.");
-
             } catch (InputMismatchException e) {
-
                 System.out.println("Numbers only.");
                 sc.nextLine();
             }
@@ -168,30 +140,22 @@ public class StudentManager {
     }
 
     private double getValidMarks() {
-
         double marks;
-
         while (true) {
-
             System.out.print("Enter marks (0 - 500): ");
-
             marks = sc.nextDouble();
             sc.nextLine();
 
             if (marks >= 0 && marks <= 500) {
                 return marks;
             }
-
             System.out.println("Invalid! Marks must be between 0 and 500.");
         }
     }
 
     private int getValidStream() {
-
         int streamCode;
-
         while (true) {
-
             System.out.println("""
                     
                     Select Stream
@@ -199,16 +163,13 @@ public class StudentManager {
                     2. Arts
                     3. Commerce
                     """);
-
             System.out.print("Choice: ");
-
             streamCode = sc.nextInt();
             sc.nextLine();
 
             if (streamCode >= 1 && streamCode <= 3) {
                 return streamCode;
             }
-
             System.out.println("Invalid! Choose between 1 - 3.");
         }
     }
@@ -217,64 +178,54 @@ public class StudentManager {
     // STREAM RESOLUTION
     // =========================
     private String resolveStreamName(int code) {
-
         return switch (code) {
-
             case 1 -> "SCIENCE";
             case 2 -> "ARTS";
             case 3 -> "COMMERCE";
-
             default -> "UNKNOWN";
         };
     }
 
-         // =========================
-        // SEARCH STUDENT
-        // =========================
+    // =========================
+    // SEARCH STUDENT
+    // =========================
+    public void searchByRoll(int roll){
+        for (Student s : students) {
+            if (s.getRoll() == roll) {
+                String grade = gradeSystem.getGrade(s.getMarks());
 
-        public void searchByRoll(int roll){
-
-
-            for (Student s : students) {
-
-                if (s.getRoll() == roll) {
-
-                    String grade = gradeSystem.getGrade(s.getMarks());
-
-                    System.out.printf("""
-                        
-                        **SEARCH FOUND**
-                        
-                        Name       : %s
-                        Roll       : %d
-                        Marks      : %.1f / 500
-                        Stream     : %s
-                        Percentage : %.2f%%
-                        Grade      : %s
-                        """,
-                            s.getName(),
-                            s.getRoll(),
-                            s.getMarks(),
-                            s.getStreamName(),
-                            s.getPercentage(),
-                            grade
-                    );
-                    return;
-                }
+                System.out.printf("""
+                    
+                    **SEARCH FOUND**
+                    
+                    Name       : %s
+                    Roll       : %d
+                    Marks      : %.1f / 500
+                    Stream     : %s
+                    Percentage : %.2f%%
+                    Grade      : %s
+                    """,
+                        s.getName(),
+                        s.getRoll(),
+                        s.getMarks(),
+                        s.getStreamName(),
+                        s.getPercentage(),
+                        grade
+                );
+                return;
             }
-
-            System.out.println("Student not found.");
         }
+        System.out.println("Student not found.");
+    }
 
-         // =========================
-         //   SAVE DATA IN DOCUMENT
-        // ==========================
-
-
+    // =========================
+    //   SAVE DATA IN DOCUMENT
+    // ==========================
     public void saveStudentsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             for (Student s : students) {
-                String line = s.getName() + "," + s.getRoll() + "," + s.getMarks() + "," + s.getStreamName();
+                // FIXED: Changed s.getStreamName() to s.getStreamCode() to store the integer cleanly
+                String line = s.getName() + "," + s.getRoll() + "," + s.getMarks() + "," + s.getStreamCode();
                 writer.write(line);
                 writer.newLine();
             }
@@ -284,5 +235,33 @@ public class StudentManager {
         }
     }
 
+    // ==============================
+    //   LOADING DATA FROM DOCUMENT
+    // ==============================
+    public void loadStudentsFromFile() {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) return;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String name = parts[0];
+                    int roll = Integer.parseInt(parts[1]);
+                    double marks = Double.parseDouble(parts[2]);
+                    int streamCode = Integer.parseInt(parts[3]);
+
+                    String streamName = resolveStreamName(streamCode);
+
+                    students.add(new Student(name, roll, marks, streamCode, streamName));
+                }
+            }
+            System.out.println("Data loaded successfully!");
+        } catch (IOException | NumberFormatException e) {
+            System.err.println("Error loading data: " + e.getMessage());
+        }
     }
+}
