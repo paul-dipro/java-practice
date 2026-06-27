@@ -1,6 +1,6 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.InputMismatchException;
+import java.util.HashMap;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,10 +11,10 @@ import java.io.File;
 public class StudentManager {
 
     // 1. ALL FIELDS AT THE TOP
-    private final ArrayList<Student> students = new ArrayList<>();
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
     private final String FILE_NAME = "students.txt";
+    private HashMap<Integer, Student> studentsMap = new HashMap<>();
 
     // =========================
     // COLLECT STUDENT DATA
@@ -31,7 +31,8 @@ public class StudentManager {
             int streamCode = getValidStream();
             String streamName = resolveStreamName(streamCode);
 
-            students.add(new Student(name, roll, marks, streamCode, streamName));
+            Student newStudent = new Student(name, roll, marks, streamCode, streamName);
+            studentsMap.put(roll, newStudent);
         }
     }
 
@@ -39,9 +40,13 @@ public class StudentManager {
     // DISPLAY ALL STUDENTS
     // =========================
     public void displayAllStudents() {
-        System.out.println("\n========== STUDENT REPORT ==========");
+        if (studentsMap.isEmpty()) {
+            System.out.println("No students available.");
+            return;
+        }
 
-        for (Student s : students) {
+        System.out.println("\n========== STUDENT REPORT ==========");
+        for (Student s : studentsMap.values()) {
             String grade = gradeSystem.getGrade(s.getMarks());
 
             System.out.printf("""
@@ -67,19 +72,18 @@ public class StudentManager {
     // DISPLAY CLASS AVERAGE
     // =========================
     public void displayAverage() {
-
-        if(students.isEmpty()) {
+        // FIXED: Using studentsMap instead of deleted 'students' list
+        if (studentsMap.isEmpty()) {
             System.out.println("No students available.");
             return;
         }
 
         double totalMarks = 0;
-
-        for(Student s : students) {
+        for (Student s : studentsMap.values()) {
             totalMarks += s.getMarks();
         }
 
-        double average = totalMarks / students.size();
+        double average = totalMarks / studentsMap.size();
 
         System.out.printf("""
         ========= SCHOOL AVERAGE =========
@@ -94,18 +98,13 @@ public class StudentManager {
         int count;
         while (true) {
             System.out.print("Enter number of students: ");
-
             try {
                 count = sc.nextInt();
                 sc.nextLine();
                 if (count > 0) {
                     return count;
                 }
-
-                if(count < 1) {
-                    System.out.println("Invalid! Student count must be greater than 0.");
-                }
-
+                System.out.println("Invalid! Student count must be greater than 0.");
             } catch (InputMismatchException e) {
                 System.out.println("Numbers only.");
                 sc.nextLine();
@@ -117,7 +116,6 @@ public class StudentManager {
         while (true) {
             System.out.print("\nEnter student name: ");
             String name = sc.nextLine().trim();
-
             if (!name.isEmpty()) {
                 return name.toUpperCase();
             }
@@ -132,13 +130,8 @@ public class StudentManager {
                 int roll = sc.nextInt();
                 sc.nextLine();
 
-                boolean isDuplicate = false;
-                for(Student s : students) {
-                    if (roll == s.getRoll()) {
-                        isDuplicate = true;
-                        break;
-                    }
-                }
+                // FIXED & OPTIMIZED: Replaced the old slow loop with an instant containsKey search!
+                boolean isDuplicate = studentsMap.containsKey(roll);
 
                 if (roll > 0 && !isDuplicate) {
                     return roll;
@@ -201,31 +194,31 @@ public class StudentManager {
     // =========================
     // SEARCH STUDENT
     // =========================
-    public void searchByRoll(int roll){
-        for (Student s : students) {
-            if (s.getRoll() == roll) {
-                String grade = gradeSystem.getGrade(s.getMarks());
+    public void searchByRoll(int roll) {
+        // OPTIMIZED: Utilizing our O(1) find method directly instead of looping!
+        Student s = findStudentByRoll(roll);
 
-                System.out.printf("""
-                    
-                    **SEARCH FOUND**
-                    
-                    Name       : %s
-                    Roll       : %d
-                    Marks      : %.1f / 500
-                    Stream     : %s
-                    Percentage : %.2f%%
-                    Grade      : %s
-                    """,
-                        s.getName(),
-                        s.getRoll(),
-                        s.getMarks(),
-                        s.getStreamName(),
-                        s.getPercentage(),
-                        grade
-                );
-                return;
-            }
+        if (s != null) {
+            String grade = gradeSystem.getGrade(s.getMarks());
+            System.out.printf("""
+                
+                **SEARCH FOUND**
+                
+                Name       : %s
+                Roll       : %d
+                Marks      : %.1f / 500
+                Stream     : %s
+                Percentage : %.2f%%
+                Grade      : %s
+                """,
+                    s.getName(),
+                    s.getRoll(),
+                    s.getMarks(),
+                    s.getStreamName(),
+                    s.getPercentage(),
+                    grade
+            );
+            return;
         }
         System.out.println("Student not found.");
     }
@@ -235,8 +228,8 @@ public class StudentManager {
     // ==========================
     public void saveStudentsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (Student s : students) {
-                // FIXED: Changed s.getStreamName() to s.getStreamCode() to store the integer cleanly
+            // FIXED: Reading clean values out from the map instead of 'students' list
+            for (Student s : studentsMap.values()) {
                 String line = s.getName() + "," + s.getRoll() + "," + s.getMarks() + "," + s.getStreamCode();
                 writer.write(line);
                 writer.newLine();
@@ -268,7 +261,8 @@ public class StudentManager {
 
                     String streamName = resolveStreamName(streamCode);
 
-                    students.add(new Student(name, roll, marks, streamCode, streamName));
+                    Student newStudent = new Student(name, roll, marks, streamCode, streamName);
+                    studentsMap.put(roll, newStudent);
                 }
             }
             System.out.println("Data loaded successfully!");
@@ -277,19 +271,16 @@ public class StudentManager {
         }
     }
 
+    // ===================
+    //   FIND DATA BY ROLL
+    // ===================
     private Student findStudentByRoll(int roll) {
-        for(Student s : students) {
-            if(s.getRoll() == roll) {
-                return s;
-            }
-        }
-        return null;
+        return studentsMap.get(roll);
     }
 
     // ===============
     //   UPDATE DATA
     // ===============
-
     public void updateStudentData() {
         System.out.print("Enter the roll number of the student to update: ");
         int roll = sc.nextInt();
@@ -305,9 +296,7 @@ public class StudentManager {
         System.out.println("Updating details for: " + targetStudent.getName());
 
         String newName = getValidName();
-
         double newMarks = getValidMarks();
-
         int newStreamCode = getValidStream();
         String newStreamName = resolveStreamName(newStreamCode);
 
@@ -317,12 +306,14 @@ public class StudentManager {
         targetStudent.setStreamName(newStreamName);
 
         System.out.println("Student details updated successfully in memory!");
+
+        // Auto-save changes to file
+        saveStudentsToFile();
     }
 
     // ===============
     //   DELETE DATA
     // ===============
-
     public void deleteStudentData() {
         System.out.print("Enter the roll number of the student to delete: ");
         int roll = sc.nextInt();
@@ -336,14 +327,10 @@ public class StudentManager {
         }
 
         System.out.println("Deleting details of: " + targetStudent.getName());
-
-        students.remove(targetStudent);
-
+        studentsMap.remove(roll);
         System.out.println("Student " + targetStudent.getName() + "'s details deleted successfully in memory!");
 
         // FORCE SYNCHRONIZATION TO FILE IMMEDIATELY
         saveStudentsToFile();
     }
-
-
 }
