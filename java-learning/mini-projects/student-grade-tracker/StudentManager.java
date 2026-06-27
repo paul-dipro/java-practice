@@ -67,21 +67,24 @@ public class StudentManager {
     // DISPLAY CLASS AVERAGE
     // =========================
     public void displayAverage() {
+
+        if(students.isEmpty()) {
+            System.out.println("No students available.");
+            return;
+        }
+
         double totalMarks = 0;
 
-        for (Student s : students) {
+        for(Student s : students) {
             totalMarks += s.getMarks();
         }
 
         double average = totalMarks / students.size();
 
         System.out.printf("""
-                    
-                    ========== SCHOOL AVERAGE ==========
-                    Average Marks : %.2f / 500
-                    """,
-                average
-        );
+        ========= SCHOOL AVERAGE =========
+        Average Marks : %.2f / 500
+        """, average);
     }
 
     // =========================
@@ -265,6 +268,15 @@ public class StudentManager {
         }
     }
 
+    private Student findStudentByRoll(int roll) {
+        for(Student s : students) {
+            if(s.getRoll() == roll) {
+                return s;
+            }
+        }
+        return null;
+    }
+
     // ===============
     //   UPDATE DATA
     // ===============
@@ -274,13 +286,7 @@ public class StudentManager {
         int roll = sc.nextInt();
         sc.nextLine();
 
-        Student targetStudent = null;
-        for(Student s : students) {
-            if(s.getRoll() == roll) {
-                targetStudent = s;
-                break;
-            }
-        }
+        Student targetStudent = findStudentByRoll(roll);
 
         if (targetStudent == null) {
             System.out.println("Student with roll number " + roll + " not found.");
@@ -313,13 +319,7 @@ public class StudentManager {
         int roll = sc.nextInt();
         sc.nextLine();
 
-        Student targetStudent = null;
-        for(Student s : students) {
-            if(s.getRoll() == roll) {
-                targetStudent = s;
-                break;
-            }
-        }
+        Student targetStudent = findStudentByRoll(roll);
 
         if (targetStudent == null) {
             System.out.println("Student with roll number " + roll + " not found.");
