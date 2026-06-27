@@ -16,13 +16,15 @@ public class Main {
                   \n_______________
                     
                          MENU
-                    _______________
-                  \n1. Add Students
+                   _______________
+                   \n
+                    1. Add Students
                     2. Search Student
                     3. Display All
                     4. Average
                     5. Update Data
-                    6. Save/Exit
+                    6. Delete Data
+                    7. Save/Exit
                     """);
 
             System.out.print("Choose an option: ");
@@ -38,7 +40,8 @@ public class Main {
                 case 3 -> manager.displayAllStudents();
                 case 4 -> manager.displayAverage();
                 case 5 -> manager.updateStudentData();
-                case 6 -> {
+                case 6 -> manager.deleteStudentData();
+                case 7 -> {
                     manager.saveStudentsToFile();
                     System.out.println("Data saved. Exiting...");
                     return;

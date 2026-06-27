@@ -304,4 +304,37 @@ public class StudentManager {
         System.out.println("Student details updated successfully in memory!");
     }
 
+    // ===============
+    //   DELETE DATA
+    // ===============
+
+    public void deleteStudentData() {
+        System.out.print("Enter the roll number of the student to delete: ");
+        int roll = sc.nextInt();
+        sc.nextLine();
+
+        Student targetStudent = null;
+        for(Student s : students) {
+            if(s.getRoll() == roll) {
+                targetStudent = s;
+                break;
+            }
+        }
+
+        if (targetStudent == null) {
+            System.out.println("Student with roll number " + roll + " not found.");
+            return;
+        }
+
+        System.out.println("Deleting details of: " + targetStudent.getName());
+
+        students.remove(targetStudent);
+
+        System.out.println("Student " + targetStudent.getName() + "'s details deleted successfully in memory!");
+
+        // FORCE SYNCHRONIZATION TO FILE IMMEDIATELY
+        saveStudentsToFile();
+    }
+
+
 }
