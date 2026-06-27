@@ -21,7 +21,8 @@ public class Main {
                     2. Search Student
                     3. Display All
                     4. Average
-                    5. Save/Exit
+                    5. Update Data
+                    6. Save/Exit
                     """);
 
             System.out.print("Choose an option: ");
@@ -36,7 +37,8 @@ public class Main {
                 }
                 case 3 -> manager.displayAllStudents();
                 case 4 -> manager.displayAverage();
-                case 5 -> {
+                case 5 -> manager.updateStudentData();
+                case 6 -> {
                     manager.saveStudentsToFile();
                     System.out.println("Data saved. Exiting...");
                     return;

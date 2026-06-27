@@ -264,4 +264,44 @@ public class StudentManager {
             System.err.println("Error loading data: " + e.getMessage());
         }
     }
+
+    // ===============
+    //   UPDATE DATA
+    // ===============
+
+    public void updateStudentData() {
+        System.out.print("Enter the roll number of the student to update: ");
+        int roll = sc.nextInt();
+        sc.nextLine();
+
+        Student targetStudent = null;
+        for(Student s : students) {
+            if(s.getRoll() == roll) {
+                targetStudent = s;
+                break;
+            }
+        }
+
+        if (targetStudent == null) {
+            System.out.println("Student with roll number " + roll + " not found.");
+            return;
+        }
+
+        System.out.println("Updating details for: " + targetStudent.getName());
+
+        String newName = getValidName();
+
+        double newMarks = getValidMarks();
+
+        int newStreamCode = getValidStream();
+        String newStreamName = resolveStreamName(newStreamCode);
+
+        targetStudent.setName(newName);
+        targetStudent.setMarks(newMarks);
+        targetStudent.setStreamCode(newStreamCode);
+        targetStudent.setStreamName(newStreamName);
+
+        System.out.println("Student details updated successfully in memory!");
+    }
+
 }
