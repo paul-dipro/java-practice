@@ -94,13 +94,22 @@ public class StudentManager {
         int count;
         while (true) {
             System.out.print("Enter number of students: ");
-            count = sc.nextInt();
-            sc.nextLine();
 
-            if (count > 0) {
-                return count;
+            try {
+                count = sc.nextInt();
+                sc.nextLine();
+                if (count > 0) {
+                    return count;
+                }
+
+                if(count < 1) {
+                    System.out.println("Invalid! Student count must be greater than 0.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Numbers only.");
+                sc.nextLine();
             }
-            System.out.println("Invalid! Student count must be greater than 0.");
         }
     }
 
