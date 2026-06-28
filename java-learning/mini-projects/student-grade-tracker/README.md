@@ -11,16 +11,18 @@ Managing student records manually becomes inefficient when dealing with multiple
 
 ## 🎯 Project Objective
 
-To build a console-based system that:
+Build a console-based Student Management System that:
 
-* Stores student data
-* Checks duplicate rolls
-* Processes academic performance
-* Calculates grades dynamically
-* Generates reports and summaries
-* Can write student data into a txt file
+* Stores and manages student records efficiently.
+* Prevents duplicate roll number entries.
+* Implements robust exception handling for error management.
+* Utilizes `HashMap` to achieve O(1) data retrieval and updates.
+* Processes and analyzes students' academic performance.
+* Calculates grades dynamically based on marks obtained.
+* Generates detailed reports and performance summaries.
+* Exports student data to a text (`.txt`) file for persistent storage.
 
-This project is designed as a foundation for backend development thinking in Java.
+This project is designed to strengthen backend development fundamentals in Java by emphasizing data structures, problem-solving, and real-world application design.
 
 ---
 
