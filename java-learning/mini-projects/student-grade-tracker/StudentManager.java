@@ -14,7 +14,7 @@ public class StudentManager {
     private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
     private final String FILE_NAME = "students.txt";
-    private HashMap<Integer, Student> studentsMap = new HashMap<>();
+    private HashMap<Integer, User> usersMap = new HashMap<>();
 
     // =========================
     // COLLECT STUDENT DATA
@@ -26,13 +26,15 @@ public class StudentManager {
             System.out.println("\n========== STUDENT " + (i + 1) + " ==========");
             String name = getValidName();
             int roll    = getValidRoll();
+            System.out.print("Enter Email: ");
+            String email = sc.nextLine().trim();
             double marks = getValidMarks();
 
             int streamCode = getValidStream();
             String streamName = resolveStreamName(streamCode);
 
-            Student newStudent = new Student(name, roll, marks, streamCode, streamName);
-            studentsMap.put(roll, newStudent);
+            Student newStudent = new Student(roll, name, email, marks, streamCode, streamName);
+            usersMap.put(roll, newStudent);
         }
     }
 
@@ -40,31 +42,33 @@ public class StudentManager {
     // DISPLAY ALL STUDENTS
     // =========================
     public void displayAllStudents() {
-        if (studentsMap.isEmpty()) {
+        if (usersMap.isEmpty()) {
             System.out.println("No students available.");
             return;
         }
 
         System.out.println("\n========== STUDENT REPORT ==========");
-        for (Student s : studentsMap.values()) {
-            String grade = gradeSystem.getGrade(s.getMarks());
+        for (User u : usersMap.values()) {
+            if (u instanceof Student s) {
+                String grade = gradeSystem.getGrade(s.getMarks());
 
-            System.out.printf("""
-                        
-                        Name       : %s
-                        Roll       : %d
-                        Marks      : %.1f / 500
-                        Stream     : %s
-                        Percentage : %.2f%%
-                        Grade      : %s
-                        """,
-                    s.getName(),
-                    s.getRoll(),
-                    s.getMarks(),
-                    s.getStreamName(),
-                    s.getPercentage(),
-                    grade
-            );
+                System.out.printf("""
+                                
+                                Name       : %s
+                                Roll       : %d
+                                Marks      : %.1f / 500
+                                Stream     : %s
+                                Percentage : %.2f%%
+                                Grade      : %s
+                                """,
+                        s.getUserName(),
+                        s.getUserId(),
+                        s.getMarks(),
+                        s.getStreamName(),
+                        s.getPercentage(),
+                        grade
+                );
+            }
         }
     }
 
@@ -73,17 +77,24 @@ public class StudentManager {
     // =========================
     public void displayAverage() {
         // FIXED: Using studentsMap instead of deleted 'students' list
-        if (studentsMap.isEmpty()) {
+        if (usersMap.isEmpty()) {
             System.out.println("No students available.");
             return;
         }
 
         double totalMarks = 0;
-        for (Student s : studentsMap.values()) {
-            totalMarks += s.getMarks();
+        int studentCount = 0;
+        for (User u : usersMap.values()) {
+            if (u instanceof Student s) {
+                totalMarks += s.getMarks();
+                studentCount++;
+            }
         }
 
-        double average = totalMarks / studentsMap.size();
+        double average = 0;
+        if (studentCount > 0) {
+            average = totalMarks / studentCount;
+        }
 
         System.out.printf("""
         ========= SCHOOL AVERAGE =========
@@ -131,7 +142,7 @@ public class StudentManager {
                 sc.nextLine();
 
                 // FIXED & OPTIMIZED: Replaced the old slow loop with an instant containsKey search!
-                boolean isDuplicate = studentsMap.containsKey(roll);
+                boolean isDuplicate = usersMap.containsKey(roll);
 
                 if (roll > 0 && !isDuplicate) {
                     return roll;
@@ -211,8 +222,8 @@ public class StudentManager {
                 Percentage : %.2f%%
                 Grade      : %s
                 """,
-                    s.getName(),
-                    s.getRoll(),
+                    s.getUserName(),
+                    s.getUserId(),
                     s.getMarks(),
                     s.getStreamName(),
                     s.getPercentage(),
@@ -229,10 +240,12 @@ public class StudentManager {
     public void saveStudentsToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
             // FIXED: Reading clean values out from the map instead of 'students' list
-            for (Student s : studentsMap.values()) {
-                String line = s.getName() + "," + s.getRoll() + "," + s.getMarks() + "," + s.getStreamCode();
-                writer.write(line);
-                writer.newLine();
+            for (User u : usersMap.values()) {
+                if (u instanceof Student s) {
+                    String line = s.getUserId() + "," + s.getUserName() + "," + s.getEmail() + "," + s.getMarks() + "," + s.getStreamCode();
+                    writer.write(line);
+                    writer.newLine();
+                }
             }
             System.out.println("Data saved successfully!");
         } catch (IOException e) {
@@ -253,16 +266,17 @@ public class StudentManager {
                 if (line.trim().isEmpty()) continue;
 
                 String[] parts = line.split(",");
-                if (parts.length == 4) {
-                    String name = parts[0];
-                    int roll = Integer.parseInt(parts[1]);
-                    double marks = Double.parseDouble(parts[2]);
-                    int streamCode = Integer.parseInt(parts[3]);
+                if (parts.length == 5) {
+                    int roll = Integer.parseInt(parts[0]);
+                    String name = parts[1];
+                    String email = parts[2];
+                    double marks = Double.parseDouble(parts[3]);
+                    int streamCode = Integer.parseInt(parts[4]);
 
                     String streamName = resolveStreamName(streamCode);
 
-                    Student newStudent = new Student(name, roll, marks, streamCode, streamName);
-                    studentsMap.put(roll, newStudent);
+                    Student newStudent = new Student(roll, name, email, marks, streamCode, streamName);
+                    usersMap.put(roll, newStudent);
                 }
             }
             System.out.println("Data loaded successfully!");
@@ -275,7 +289,14 @@ public class StudentManager {
     //   FIND DATA BY ROLL
     // ===================
     private Student findStudentByRoll(int roll) {
-        return studentsMap.get(roll);
+        User u = usersMap.get(roll); // Pull the generic user out
+
+        // Check if the user exists and is actually a Student
+        if (u instanceof Student s) {
+            return s; // Safely return the matched Student object
+        }
+
+        return null; // Return null if not found or if it belongs to a Teacher
     }
 
     // ===============
@@ -293,17 +314,22 @@ public class StudentManager {
             return;
         }
 
-        System.out.println("Updating details for: " + targetStudent.getName());
+        System.out.println("Updating details for: " + targetStudent.getUserName());
 
         String newName = getValidName();
+
+        System.out.print("Enter New Email: ");
+        String newEmail = sc.nextLine().trim();
+
         double newMarks = getValidMarks();
         int newStreamCode = getValidStream();
         String newStreamName = resolveStreamName(newStreamCode);
 
-        targetStudent.setName(newName);
+        targetStudent.setUserName(newName);
         targetStudent.setMarks(newMarks);
         targetStudent.setStreamCode(newStreamCode);
         targetStudent.setStreamName(newStreamName);
+        targetStudent.setEmail(newEmail);
 
         System.out.println("Student details updated successfully in memory!");
 
@@ -326,9 +352,9 @@ public class StudentManager {
             return;
         }
 
-        System.out.println("Deleting details of: " + targetStudent.getName());
-        studentsMap.remove(roll);
-        System.out.println("Student " + targetStudent.getName() + "'s details deleted successfully in memory!");
+        System.out.println("Deleting details of: " + targetStudent.getUserName());
+        usersMap.remove(roll);
+        System.out.println("Student " + targetStudent.getUserName() + "'s details deleted successfully in memory!");
 
         // FORCE SYNCHRONIZATION TO FILE IMMEDIATELY
         saveStudentsToFile();
