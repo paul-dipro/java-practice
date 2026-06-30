@@ -1,164 +1,32 @@
-# 📘 Student Grade Tracker (Java OOP CLI Project)
+Here is your completely updated, production-ready documentation markdown file reflecting the advanced polymorphic architecture and persistence layers you built, followed by your next Git commit message.📘 Student Grade Tracker (Java OOP CLI Project)🧭 Problem StatementManaging student records manually becomes inefficient when dealing with multiple data types, concurrency considerations, real-time lookups, and persistent tracking. This system addresses those challenges by implementing a scalable role-based backend engine to demonstrate Polymorphism, Data Encapsulation, Interface Contracts, and Robust Local Persistence.🎯 Project ObjectiveBuild an enterprise-structured, console-based role management and student analytics system that:Achieves $O(1)$ Time Complexity: Replaces legacy sequential ArrayList lookups with a HashMap<Integer, User> registry for instant data retrieval and updates.Leverages Polymorphic Architecture: Uses an abstract User class implementing an Authenticatable interface to cleanly support multi-role hierarchies (Students and Teachers).Guarantees Data Integrity: Enforces unique constraint validations on roll numbers and handles text scanner buffer flushing to eliminate data corruption.Implements File I/O Persistence: Features a unified 5-column CSV serialization mechanism to save and load student metrics continuously.Delivers Core Analytics: Dynamically processes academic records to calculate precise percentages, assign letter grades, and isolate class averages cleanly.🛠️ Tech StackLanguage: Java (JDK 17+)Concepts: Object-Oriented Programming (Inheritance, Polymorphism, Data Hiding, Interfaces)Data Structures: HashMap, ArraysPersistence Layer: Java File I/O (BufferedReader / BufferedWriter, FileReader / FileWriter)Interface: Command Line Interface (CLI)🏗️ System Architecture        [ Authenticatable ] (Interface Contract)
+↓
+[ User ] (Abstract Base Class)
+/        \
+[ Student ]   [ Teacher ] (Polymorphic Entities)
 
+                ↓
+    
+            Main.java (Application Entry Point)
+                ↓ (Execution Flow Control)
+        StudentManager.java (Core Business Logic / HashMap Registry)
+                ↓ (Data Evaluation)
+         GradeSystem.java (Business Rule Engine / Grading Matrix)
+📦 Modules Breakdown1. Main (Application Driver)Evaluates system runtime control flow.Handles boot-time data hydration via manager.loadStudentsFromFile().Operates the infinite CLI polling routine and invokes decoupled transactional logic layers.2. StudentManager (Registry & Business Logic Layer)Data Management: Implements transactional collectStudents(), searchByRoll(), updateStudentData(), and deleteStudentData() operations.Persistence Engine: Manages atomic reads and writes to students.txt using structured field serialization arrays.Validation Engine: Enforces deep constraints on structural data bounds (marks validation from 0 to 500, non-empty text, numeric inputs via InputMismatchException).3. User, Student & Teacher (Data Model Layer)Authenticatable: An interface enforcing credential matching contracts (login()).User: The abstract identity root holding userId, name, and email with clean getter/setter encapsulation.Student & Teacher: Child implementations overriding displayDashboard() to render custom administrative reporting view modules.4. GradeSystem (Rules Engine)Explicitly separated from data-holding records to calculate student grades cleanly based on marks.📊 Grading SystemMarks RangeGrade400 – 500A+300 – 399A225 – 299B150 – 224CBelow 150F▶️ How to RunCompile EverythingBashjavac Main.java User.java Student.java Teacher.java StudentManager.java GradeSystem.java Authenticatable.java
+Run ApplicationBashjava Main
+🧩 Production Sample Menu_______________
 
----
-
-## 🧭 Problem Statement
-
-Managing student records manually becomes inefficient when dealing with multiple students, marks calculation, and performance tracking. This CLI project simulates a lightweight student management system using Java to demonstrate **Object-Oriented Design, separation of concerns, and business logic structuring**.
-
----
-
-## 🎯 Project Objective
-
-Build a console-based Student Management System that:
-
-* Stores and manages student records efficiently.
-* Prevents duplicate roll number entries.
-* Implements robust exception handling for error management.
-* Utilizes `HashMap` to achieve O(1) data retrieval and updates.
-* Processes and analyzes students' academic performance.
-* Calculates grades dynamically based on marks obtained.
-* Generates detailed reports and performance summaries.
-* Exports student data to a text (`.txt`) file for persistent storage.
-
-This project is designed to strengthen backend development fundamentals in Java by emphasizing data structures, problem-solving, and real-world application design.
-
----
-
-## 🛠️ Tech Stack
-
-- Java
-- Object-Oriented Programming (OOP)
-- ArrayList
-- Scanner
-- CLI (Command Line Interface)
-
-## 🏗️ System Architecture
-
-```
-Main.java
-   ↓ (User Interaction / Flow Control)
-StudentManager.java
-   ↓ (Business Logic / Operations)
-Student.java
-   ↓ (Data Model / Entity)
-GradeSystem.java
-   ↓ (Business Rules / Grading Logic)
-```
-
----
-
-## 📦 Modules Breakdown
-
-### 1. Main (Entry Point)
-
-* Handles program execution flow
-* Displays menu
-* Takes user input
-* Calls StudentManager methods
-
----
-
-### 2. StudentManager (Core Logic Layer)
-
-Responsible for:
-
-* Adding students
-* Searching students
-* Displaying reports
-* Calculating averages
-* Managing student collection (ArrayList)
-* Duplicate roll handeling
-
----
-
-### 3. Student (Data Model)
-
-Represents a student entity with:
-
-* Name
-* Roll
-* Marks
-* Stream
-* Percentage calculation
-
----
-
-### 4. GradeSystem (Business Rule Engine)
-
-Encapsulates grading logic:
-
-* Converts marks into grades
-* Keeps rule system separate from data handling
-
----
-
-## 🧪 Features
-
-* Add multiple students dynamically
-* Validate user input
-* Store student records in memory
-* Calculate percentage automatically
-* Assign grades based on marks
-* Display full student report
-* Compute class average
-* Search student by roll number
-
----
-
-## 📊 Grading System
-
-| Marks Range | Grade |
-| ----------- | ----- |
-| 400 – 500   | A+    |
-| 300 – 399   | A     |
-| 225 – 299   | B     |
-| 150 – 224   | C     |
-| Below 150   | F     |
-
----
-
-## ▶️ How to Run
-
-### Compile
-
-```bash
-javac Main.java Student.java StudentManager.java GradeSystem.java
-```
-
-### Run
-
-```bash
-java Main
-```
-
----
-
-## 🧩 Sample Menu
-
-```
+       MENU
 _______________
 
-     MENU
-_______________
 
 1. Add Students
 2. Search Student
 3. Display All
 4. Average
-5. Exit
-```
+5. Update Data
+6. Delete Data
+7. Save/Exit
 
----
-
-## 📌 Example Output
-
-```
-Name       : DIPRO
-Roll       : 12
-Marks      : 445.0 / 500
-Stream     : ARTS
-Percentage : 89.00%
-Grade      : A+
-```
+Choose an option:
+📌 Data Serialization Format (students.txt)Code snippet12,DIPRO PAUL,dipropaul@email.com,445.0,2
+45,TUG,oisghoig@email.com,376.0,1
