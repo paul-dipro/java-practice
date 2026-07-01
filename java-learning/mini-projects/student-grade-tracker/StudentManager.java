@@ -26,8 +26,7 @@ public class StudentManager {
             System.out.println("\n========== STUDENT " + (i + 1) + " ==========");
             String name = getValidName();
             int roll    = getValidRoll();
-            System.out.print("Enter Email: ");
-            String email = sc.nextLine().trim();
+            String email = getValidEmail();;
             double marks = getValidMarks();
 
             int streamCode = getValidStream();
@@ -152,6 +151,19 @@ public class StudentManager {
                 System.out.println("Numbers only.");
                 sc.nextLine();
             }
+        }
+    }
+
+    private String getValidEmail() {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+
+        while (true) {
+            System.out.print("Enter Email: ");
+            String email = sc.nextLine().trim();
+            if (email.matches(emailRegex)) {
+                return email.toLowerCase();
+            }
+            System.out.println("Invalid email format! Example: student@domain.com");
         }
     }
 
@@ -317,10 +329,7 @@ public class StudentManager {
         System.out.println("Updating details for: " + targetStudent.getUserName());
 
         String newName = getValidName();
-
-        System.out.print("Enter New Email: ");
-        String newEmail = sc.nextLine().trim();
-
+        String newEmail = getValidEmail();
         double newMarks = getValidMarks();
         int newStreamCode = getValidStream();
         String newStreamName = resolveStreamName(newStreamCode);
