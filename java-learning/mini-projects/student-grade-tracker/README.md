@@ -311,18 +311,6 @@ This project demonstrates practical implementation of:
 
 ---
 
-# 🔮 Future Enhancements
-
-* Password-based authentication
-* Role-based authorization
-* Database integration (MySQL/PostgreSQL)
-* JavaFX GUI
-* REST API layer
-* Student ranking system
-* Export to CSV/PDF reports
-* Unit testing with JUnit
-
----
 
 ## 👨‍💻 Author
 
