@@ -11,7 +11,7 @@ A terminal-based logic game based on the "Battleship" concept.
 
 ## 2. Student Grade Tracker
 A management tool for academic data entry and analysis.
-*   **Core Concepts:** ArrayLists, input validation, and statistical calculations (average, highest/lowest scores).
+*   **Core Concepts:** ArrayLists, input validation, HashMap, Polymorphism and statistical calculations (average, highest/lowest scores) Exception Handling.
 *   **Goal:** Provide a persistent-style interface for educators to track student performance.
 
 ---
