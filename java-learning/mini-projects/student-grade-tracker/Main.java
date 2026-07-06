@@ -9,7 +9,7 @@ public class Main {
         StudentManager manager = new StudentManager();
 
         //Loading data at frist
-        manager.loadStudentsFromFile();
+        manager.loadStudentsFromDataBase();
 
         while (true) {
             System.out.println("""
@@ -39,11 +39,10 @@ public class Main {
                 }
                 case 3 -> manager.displayAllStudents();
                 case 4 -> manager.displayAverage();
-                case 5 -> manager.updateStudentData();
-                case 6 -> manager.deleteStudentData();
+                case 5 -> manager.updateStudentDataBase();
+                case 6 -> manager.deleteStudentDataBase();
                 case 7 -> {
-                    manager.saveStudentsToFile();
-                    System.out.println("Data saved. Exiting...");
+                    System.out.println("Exiting application. Goodbye!");
                     return;
                 }
                 default -> System.out.println("Invalid choice");

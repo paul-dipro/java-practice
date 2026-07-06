@@ -7,16 +7,43 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.File;
+//FILE HANDLING USING PostgreSQL IMPORTS
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.ResultSet;
 
 public class StudentManager {
 
     // 1. ALL FIELDS AT THE TOP
-    private final Scanner sc = new Scanner(System.in);
     private final GradeSystem gradeSystem = new GradeSystem();
     private final String FILE_NAME = "students.txt";
     private HashMap<Integer, User> usersMap = new HashMap<>();
 
-    // =========================
+    static {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Kolkata"));
+    }
+
+    private final Scanner sc = new Scanner(System.in);
+
+    //==========================================================
+    //Private helper method to open a secure channel
+    // to my running database
+    //============================================================
+
+    private Connection connect() throws SQLException {
+
+        String url = "jdbc:postgresql://127.0.0.1:5433/student_manager_db";
+        String user = "student_admin";
+        String password = "Admin123";
+
+        return DriverManager.getConnection(url, user, password);
+    }
+
+
+
+     // =========================
     // COLLECT STUDENT DATA
     // =========================
     public void collectStudents() {
@@ -26,7 +53,7 @@ public class StudentManager {
             System.out.println("\n========== STUDENT " + (i + 1) + " ==========");
             String name = getValidName();
             int roll    = getValidRoll();
-            String email = getValidEmail();;
+            String email = getValidEmail();
             double marks = getValidMarks();
 
             int streamCode = getValidStream();
@@ -34,6 +61,8 @@ public class StudentManager {
 
             Student newStudent = new Student(roll, name, email, marks, streamCode, streamName);
             usersMap.put(roll, newStudent);
+
+            saveStudentToDatabase(roll, name, email, marks, streamCode);
         }
     }
 
@@ -247,52 +276,56 @@ public class StudentManager {
     }
 
     // =========================
-    //   SAVE DATA IN DOCUMENT
+    //   SAVE DATA IN DATABASE
     // ==========================
-    public void saveStudentsToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            // FIXED: Reading clean values out from the map instead of 'students' list
-            for (User u : usersMap.values()) {
-                if (u instanceof Student s) {
-                    String line = s.getUserId() + "," + s.getUserName() + "," + s.getEmail() + "," + s.getMarks() + "," + s.getStreamCode();
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-            System.out.println("Data saved successfully!");
-        } catch (IOException e) {
-            System.err.println("Error saving students: " + e.getMessage());
+
+    public void saveStudentToDatabase(int rollNumber, String name, String email, double marks, int streamCode) {
+        String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?)";
+
+        // Try-with-resources automatically closes the connection and statement when done
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            // Safety parameters to prevent SQL injection
+            pstmt.setInt(1, rollNumber);
+            pstmt.setString(2, name);
+            pstmt.setString(3, email);
+            pstmt.setDouble(4, marks);
+            pstmt.setInt(5, streamCode);
+
+            pstmt.executeUpdate();
+            System.out.println("Student records synced to PostgreSQL database successfully.");
+
+        } catch (SQLException e) {
+            System.err.println("Database sync error: " + e.getMessage());
         }
     }
 
     // ==============================
-    //   LOADING DATA FROM DOCUMENT
+    //   LOADING DATA FROM DATABASE
     // ==============================
-    public void loadStudentsFromFile() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
+    public void loadStudentsFromDataBase() {
+        String sql = "SELECT roll_number, name, email, marks, stream_code FROM students";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty()) continue;
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-                String[] parts = line.split(",");
-                if (parts.length == 5) {
-                    int roll = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String email = parts[2];
-                    double marks = Double.parseDouble(parts[3]);
-                    int streamCode = Integer.parseInt(parts[4]);
+            while (rs.next()) {
+
+                    int roll = rs.getInt("roll_number");
+                    String name = rs.getString("name");
+                    String email = rs.getString("email");
+                    double marks = rs.getDouble("marks");
+                    int streamCode = rs.getInt("stream_code");
 
                     String streamName = resolveStreamName(streamCode);
 
                     Student newStudent = new Student(roll, name, email, marks, streamCode, streamName);
                     usersMap.put(roll, newStudent);
-                }
             }
-            System.out.println("Data loaded successfully!");
-        } catch (IOException | NumberFormatException e) {
+            System.out.println("Data loaded successfully from PostgreSQL!");
+        } catch (SQLException e) {
             System.err.println("Error loading data: " + e.getMessage());
         }
     }
@@ -314,7 +347,10 @@ public class StudentManager {
     // ===============
     //   UPDATE DATA
     // ===============
-    public void updateStudentData() {
+    public void updateStudentDataBase() {
+
+        String sql = "UPDATE students SET name = ?, email = ?, marks = ?, stream_code = ? WHERE roll_number = ?";
+
         System.out.print("Enter the roll number of the student to update: ");
         int roll = sc.nextInt();
         sc.nextLine();
@@ -342,14 +378,30 @@ public class StudentManager {
 
         System.out.println("Student details updated successfully in memory!");
 
-        // Auto-save changes to file
-        saveStudentsToFile();
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newName);
+            pstmt.setString(2, newEmail);
+            pstmt.setDouble(3, newMarks);
+            pstmt.setInt(4, newStreamCode);
+            pstmt.setInt(5, roll); // The WHERE clause parameter
+
+            pstmt.executeUpdate();
+            System.out.println("Student details synchronized to PostgreSQL successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Database update error: " + e.getMessage());
+        }
     }
 
     // ===============
     //   DELETE DATA
     // ===============
-    public void deleteStudentData() {
+    public void deleteStudentDataBase() {
+
+        String sql = "DELETE FROM students WHERE roll_number = ?";
+
         System.out.print("Enter the roll number of the student to delete: ");
         int roll = sc.nextInt();
         sc.nextLine();
@@ -365,7 +417,16 @@ public class StudentManager {
         usersMap.remove(roll);
         System.out.println("Student " + targetStudent.getUserName() + "'s details deleted successfully in memory!");
 
-        // FORCE SYNCHRONIZATION TO FILE IMMEDIATELY
-        saveStudentsToFile();
+        try (Connection conn = this.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, roll);
+
+            pstmt.executeUpdate();
+            System.out.println("Student details deleted from PostgreSQL successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Database update error: " + e.getMessage());
+        }
     }
 }
