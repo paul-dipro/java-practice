@@ -1,12 +1,6 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.HashMap;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.File;
 //FILE HANDLING USING PostgreSQL IMPORTS
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +12,6 @@ public class StudentManager {
 
     // 1. ALL FIELDS AT THE TOP
     private final GradeSystem gradeSystem = new GradeSystem();
-    private final String FILE_NAME = "students.txt";
     private HashMap<Integer, User> usersMap = new HashMap<>();
 
     static {
@@ -280,7 +273,7 @@ public class StudentManager {
     // ==========================
 
     public void saveStudentToDatabase(int rollNumber, String name, String email, double marks, int streamCode) {
-        String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?, ?)";
 
         // Try-with-resources automatically closes the connection and statement when done
         try (Connection conn = this.connect();
