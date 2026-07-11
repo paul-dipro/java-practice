@@ -31,6 +31,7 @@ A Java CLI application for managing student records using **Object-Oriented Prog
 ```text
 Main.java
 StudentManager.java
+TeacherManager.java
 GradeSystem.java
 Student.java
 Teacher.java
@@ -48,11 +49,11 @@ Authenticatable
         ▼
    User (Abstract)
      /        \
-Student     Teacher
-      │
-StudentManager
-      │
- PostgreSQL
+Student       Teacher
+      │          |
+StudentManager  TeacherManager
+      │               |
+ PostgreSQL       PostgreSQL
 ```
 
 ---
