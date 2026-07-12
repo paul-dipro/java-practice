@@ -20,22 +20,6 @@ public class StudentManager {
 
     private final Scanner sc = new Scanner(System.in);
 
-    //==========================================================
-    //Private helper method to open a secure channel
-    // to my running database
-    //============================================================
-
-    private Connection connect() throws SQLException {
-
-        String url = "jdbc:postgresql://127.0.0.1:5433/student_manager_db";
-        String user = "student_admin";
-        String password = "Admin123";
-
-        return DriverManager.getConnection(url, user, password);
-    }
-
-
-
      // =========================
     // COLLECT STUDENT DATA
     // =========================
@@ -273,10 +257,10 @@ public class StudentManager {
     // ==========================
 
     public void saveStudentToDatabase(int rollNumber, String name, String email, double marks, int streamCode) {
-        String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?)";
 
         // Try-with-resources automatically closes the connection and statement when done
-        try (Connection conn = this.connect();
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             // Safety parameters to prevent SQL injection
@@ -300,7 +284,7 @@ public class StudentManager {
     public void loadStudentsFromDataBase() {
         String sql = "SELECT roll_number, name, email, marks, stream_code FROM students";
 
-        try (Connection conn = this.connect();
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -327,14 +311,13 @@ public class StudentManager {
     //   FIND DATA BY ROLL
     // ===================
     private Student findStudentByRoll(int roll) {
-        User u = usersMap.get(roll); // Pull the generic user out
+        User u = usersMap.get(roll);
 
-        // Check if the user exists and is actually a Student
         if (u instanceof Student s) {
-            return s; // Safely return the matched Student object
+            return s;
         }
 
-        return null; // Return null if not found or if it belongs to a Teacher
+        return null;
     }
 
     // ===============
@@ -371,7 +354,7 @@ public class StudentManager {
 
         System.out.println("Student details updated successfully in memory!");
 
-        try (Connection conn = this.connect();
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, newName);
@@ -410,7 +393,7 @@ public class StudentManager {
         usersMap.remove(roll);
         System.out.println("Student " + targetStudent.getUserName() + "'s details deleted successfully in memory!");
 
-        try (Connection conn = this.connect();
+        try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, roll);

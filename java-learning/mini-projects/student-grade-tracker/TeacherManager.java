@@ -1,39 +1,19 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.HashMap;
-//FILE HANDLING USING PostgreSQL IMPORTS
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public class TeacherManager {
 
-    // 1. ALL FIELDS AT THE TOP
-    private HashMap<Integer, User> usersMap = new HashMap<>();
+    private final HashMap<Integer, User> usersMap = new HashMap<>();
+    private final Scanner sc = new Scanner(System.in);
 
     static {
         java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Asia/Kolkata"));
     }
-
-    private final Scanner sc = new Scanner(System.in);
-
-    //==========================================================
-    //Private helper method to open a secure channel
-    // to my running database
-    //============================================================
-
-    private Connection connect() throws SQLException {
-
-        String url = "jdbc:postgresql://127.0.0.1:5433/teacher_manager_db";
-        String user = "teacher_admin";
-        String password = "Admin123";
-
-        return DriverManager.getConnection(url, user, password);
-    }
-
-
 
     // =========================
     // COLLECT TEACHER DATA
@@ -50,10 +30,8 @@ public class TeacherManager {
             double salary = getValidSalary();
             String status = getValidStatus();
 
-
             Teacher newTeacher = new Teacher(userId, name, email, schoolName, salary, status);
             usersMap.put(userId, newTeacher);
-
             saveTeacherToDatabase(userId, name, email, schoolName, salary, status);
         }
     }
@@ -77,26 +55,23 @@ public class TeacherManager {
                 Name             : %s
                 Email            : %s
                 School Name      : %s
-                Salary           : %s
+                Salary           : %.2f
                 Status           : %s
                 """,
                         t.getUserId(),
-                        t.getUserName(),
-                        t.getEmail(),
-                        t.getSchoolName(),
-                        t.getSalary(),
-                        t.getStatus()
+                t.getUserName(),
+                t.getEmail(),
+                t.getSchoolName(),
+                t.getSalary(),
+                t.getStatus()
                 );
             }
         }
     }
 
-
     // =========================
     // VALIDATIONS
     // =========================
-
-
     private int getValidUserId() {
         while (true) {
             System.out.print("User Id: ");
@@ -104,7 +79,6 @@ public class TeacherManager {
                 int userId = sc.nextInt();
                 sc.nextLine();
 
-                // FIXED & OPTIMIZED: Replaced the old slow loop with an instant containsKey search!
                 boolean isDuplicate = usersMap.containsKey(userId);
 
                 if (userId > 0 && !isDuplicate) {
@@ -117,7 +91,6 @@ public class TeacherManager {
             }
         }
     }
-
 
     private int getValidTeacherCount() {
         int count;
@@ -148,7 +121,6 @@ public class TeacherManager {
         }
     }
 
-
     private String getValidEmail() {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 
@@ -173,7 +145,6 @@ public class TeacherManager {
         }
     }
 
-
     private double getValidSalary() {
         double salary;
         while (true) {
@@ -184,7 +155,7 @@ public class TeacherManager {
             if (salary >= 0 && salary <= 1000000000) {
                 return salary;
             }
-            System.out.println("Salary! amount exceeds! Check Again!");
+            System.out.println("Salary amount exceeds! Check Again!");
         }
     }
 
@@ -199,16 +170,13 @@ public class TeacherManager {
         }
     }
 
-
-    // =========================
+    // ==================
     // SEARCH TEACHER
-    // =========================
-    public void userId(int userId) {
-        // OPTIMIZED: Utilizing our O(1) find method directly instead of looping!
+    // ==================
+    public void searchByTeacherId(int userId) {
         Teacher t = searchByUserId(userId);
 
         if (t != null) {
-
             System.out.printf("""
                 
                 **SEARCH FOUND**
@@ -217,15 +185,15 @@ public class TeacherManager {
                 Name         : %s
                 Email        : %s
                 School Name  : %s
-                Salary       : %.2f%%
+                Salary       : %.2f
                 Status       : %s
                 """,
                     t.getUserId(),
-                    t.getUserName(),
-                    t.getEmail(),
-                    t.getSchoolName(),
-                    t.getSalary(),
-                    t.getStatus()
+            t.getUserName(),
+            t.getEmail(),
+            t.getSchoolName(),
+            t.getSalary(),
+            t.getStatus()
             );
             return;
         }
@@ -235,15 +203,12 @@ public class TeacherManager {
     // =========================
     //   SAVE DATA IN DATABASE
     // ==========================
-
     public void saveTeacherToDatabase(int userId, String name, String email, String schoolName, double salary, String status) {
-        String sql = "INSERT INTO teachers (userId, name, email, schoolName, salary, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO teachers (user_id, name, email, school_name, salary, status) VALUES (?, ?, ?, ?, ?, ?)";
 
-        // Try-with-resources automatically closes the connection and statement when done
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Safety parameters to prevent SQL injection
             pstmt.setInt(1, userId);
             pstmt.setString(2, name);
             pstmt.setString(3, email);
@@ -263,18 +228,17 @@ public class TeacherManager {
     //   LOADING DATA FROM DATABASE
     // ==============================
     public void loadTeachersFromDataBase() {
-        String sql = "SELECT userId, name, email, schoolName, salary, status FROM teachers";
+        String sql = "SELECT user_id, name, email, school_name, salary, status FROM teachers";
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-
-                int userId = rs.getInt("userId");
+                int userId = rs.getInt("user_id");
                 String name = rs.getString("name");
                 String email = rs.getString("email");
-                String schoolName = rs.getString("schoolName");
+                String schoolName = rs.getString("school_name");
                 double salary = rs.getDouble("salary");
                 String status = rs.getString("status");
 
@@ -291,22 +255,19 @@ public class TeacherManager {
     //   FIND DATA BY USER ID
     // ===================
     private Teacher searchByUserId(int userId) {
-        User u = usersMap.get(userId); // Pull the generic user out
+        User u = usersMap.get(userId);
 
-        // Check if the user exists and is actually a Student
         if (u instanceof Teacher t) {
-            return t; // Safely return the matched Student object
+            return t;
         }
-
-        return null; // Return null if not found or if it belongs to a Teacher
+        return null;
     }
 
     // ===============
     //   UPDATE DATA
     // ===============
     public void updateTeacherDataBase() {
-
-        String sql = "UPDATE teachers SET name = ?, email = ?, schoolName = ?, salary = ? , status = ? WHERE userId = ?";
+        String sql = "UPDATE teachers SET name = ?, email = ?, school_name = ?, salary = ? , status = ? WHERE user_id = ?";
 
         System.out.print("Enter the userId of the teacher to update: ");
         int userId = sc.nextInt();
@@ -335,20 +296,18 @@ public class TeacherManager {
 
         System.out.println("Teacher details updated successfully in memory!");
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, newName);
             pstmt.setString(2, newEmail);
             pstmt.setString(3, newSchoolName);
             pstmt.setDouble(4, newSalary);
             pstmt.setString(5, newStatus);
-
-            pstmt.setInt(6, userId); // The WHERE clause parameter
+            pstmt.setInt(6, userId);
 
             pstmt.executeUpdate();
             System.out.println("Teacher details synchronized to PostgreSQL successfully!");
-
         } catch (SQLException e) {
             System.err.println("Database update error: " + e.getMessage());
         }
@@ -358,8 +317,7 @@ public class TeacherManager {
     //   DELETE DATA
     // ===============
     public void deleteTeacherDataBase() {
-
-        String sql = "DELETE FROM teachers WHERE userId = ?";
+        String sql = "DELETE FROM teachers WHERE user_id = ?";
 
         System.out.print("Enter the userId of the teacher to delete: ");
         int userId = sc.nextInt();
@@ -376,8 +334,8 @@ public class TeacherManager {
         usersMap.remove(userId);
         System.out.println("Teacher " + targetTeacher.getUserName() + "'s details deleted successfully in memory!");
 
-        try (Connection conn = this.connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, userId);
 
