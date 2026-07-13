@@ -10,6 +10,7 @@ A Java CLI application for managing student records using **Object-Oriented Prog
 * Fast student lookup using `HashMap`
 * OOP with Inheritance, Polymorphism, Abstraction & Interfaces
 * JDBC with Prepared Statements
+* Centralized database management 
 * Input validation and exception handling
 * Grade and percentage calculation
 * Class average generation
@@ -53,6 +54,11 @@ Student       Teacher
       │          |
 StudentManager  TeacherManager
       │               |
+      \               /
+       \             /
+        \           /
+            DBUtil
+           /     \
  PostgreSQL       PostgreSQL
 ```
 
