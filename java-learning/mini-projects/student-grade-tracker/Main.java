@@ -100,7 +100,7 @@ public class Main {
                     System.out.print("Enter UserId: ");
                     int userId = sc.nextInt();
 
-                    manager.userId(userId);
+                    //manager.userId(userId);
                 }
                 case 3 -> manager.displayAllTeachers();
                 case 4 -> manager.updateTeacherDataBase();
