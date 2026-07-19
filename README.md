@@ -1,3 +1,3 @@
 # Java Learning
 
-Ongoing Java programming practice and exercises and mini projects with daily documentation.
+Ongoing Java programming practice and exercises and mini projects and dsa practice with daily documentation.
