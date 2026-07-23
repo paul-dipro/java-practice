@@ -1,6 +1,5 @@
 public class Teacher extends User {
 
-    // Only teacher-specific fields stay here.
     private String schoolName;
     private double salary;
     private String status;
@@ -14,13 +13,13 @@ public class Teacher extends User {
 
     @Override
     public boolean login(String password) {
-        // Enforcing the Authenticatable contract with a mock password check
+
         return password.equals("teacher123");
     }
 
     @Override
     public void displayDashboard() {
-        // Enforcing the abstract User rule. This handles the reporting logic polymorphically!
+
         System.out.printf("""
                 
                 === TEACHER PORTAL INTERFACE ===
@@ -31,9 +30,9 @@ public class Teacher extends User {
                 Salary           : %s
                 Status           : %s
                 """,
-                getUserId(),      // Inherited from User
-                getUserName(),    // Inherited from User
-                getEmail(),       // Inherited from User
+                getUserId(),
+                getUserName(),
+                getEmail(),
                 this.schoolName,
                 this.salary,
                 this.status

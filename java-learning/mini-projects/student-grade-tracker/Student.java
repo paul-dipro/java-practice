@@ -1,6 +1,5 @@
 public class Student extends User {
 
-    // Only student-specific fields stay here.
     private double marks;
     private int streamCode;
     private String streamName;
@@ -9,7 +8,6 @@ public class Student extends User {
     // CONSTRUCTOR
     // =========================
     public Student(int userId, String name, String email, double marks, int streamCode, String streamName) {
-        // Rule: Super constructor MUST be called first to initialize the parent 'User' fields!
         super(userId, name, email);
         this.marks = marks;
         this.streamCode = streamCode;
@@ -22,13 +20,11 @@ public class Student extends User {
 
     @Override
     public boolean login(String password) {
-        // Enforcing the Authenticatable contract with a mock password check
         return password.equals("student123");
     }
 
     @Override
     public void displayDashboard() {
-        // Enforcing the abstract User rule. This handles the reporting logic polymorphically!
         System.out.printf("""
                 
                 === STUDENT PORTAL INTERFACE ===
@@ -39,9 +35,9 @@ public class Student extends User {
                 Stream     : %s
                 Percentage : %.2f%%
                 """,
-                getUserId(),      // Inherited from User
-                getUserName(),    // Inherited from User
-                getEmail(),       // Inherited from User
+                getUserId(),
+                getUserName(),
+                getEmail(),
                 this.marks,
                 this.streamName,
                 getPercentage()

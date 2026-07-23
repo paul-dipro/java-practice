@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 
 public class StudentManager {
 
-    // 1. ALL FIELDS AT THE TOP
     private final GradeSystem gradeSystem = new GradeSystem();
     private HashMap<Integer, User> usersMap = new HashMap<>();
 
@@ -81,7 +80,7 @@ public class StudentManager {
     // DISPLAY CLASS AVERAGE
     // =========================
     public void displayAverage() {
-        // FIXED: Using studentsMap instead of deleted 'students' list
+
         if (usersMap.isEmpty()) {
             System.out.println("No students available.");
             return;
@@ -146,7 +145,6 @@ public class StudentManager {
                 int roll = sc.nextInt();
                 sc.nextLine();
 
-                // FIXED & OPTIMIZED: Replaced the old slow loop with an instant containsKey search!
                 boolean isDuplicate = usersMap.containsKey(roll);
 
                 if (roll > 0 && !isDuplicate) {
@@ -224,7 +222,7 @@ public class StudentManager {
     // SEARCH STUDENT
     // =========================
     public void searchByRoll(int roll) {
-        // OPTIMIZED: Utilizing our O(1) find method directly instead of looping!
+
         Student s = findStudentByRoll(roll);
 
         if (s != null) {
@@ -259,11 +257,10 @@ public class StudentManager {
     public void saveStudentToDatabase(int rollNumber, String name, String email, double marks, int streamCode) {
         String sql = "INSERT INTO students (roll_number, name, email, marks, stream_code) VALUES (?, ?, ?, ?, ?)";
 
-        // Try-with-resources automatically closes the connection and statement when done
+
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            // Safety parameters to prevent SQL injection
             pstmt.setInt(1, rollNumber);
             pstmt.setString(2, name);
             pstmt.setString(3, email);
@@ -361,7 +358,7 @@ public class StudentManager {
             pstmt.setString(2, newEmail);
             pstmt.setDouble(3, newMarks);
             pstmt.setInt(4, newStreamCode);
-            pstmt.setInt(5, roll); // The WHERE clause parameter
+            pstmt.setInt(5, roll);
 
             pstmt.executeUpdate();
             System.out.println("Student details synchronized to PostgreSQL successfully!");
